@@ -27,4 +27,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-}
+}//cos wyjdzie.
+
+//TODO: sprawdzic gita
+

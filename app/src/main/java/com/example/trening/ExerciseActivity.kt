@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class ExerciseActivity : AppCompatActivity() {
@@ -12,23 +13,29 @@ class ExerciseActivity : AppCompatActivity() {
     private lateinit var tvExerciseTitle: TextView
     private lateinit var btnCounter: Button
     private lateinit var tvTimer: TextView
+    //private lateinit var dbHelper: DBHelper
 
     private var currentReps = 5
     private var seriesLeft = 5
-    private var countDownTimer = 10000 //w mili sek
+    private var countDownTimer = 4000 //w mili sek
     private var isResting = false
     private var restTimer: CountDownTimer? = null
+
+    private lateinit var dbHelper: DBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exercise)
+        println(findViewById<TextView>(R.id.tvExerciseTitle))
 
+        dbHelper = DBHelper(this)
+        //val exerciseType = tvExerciseTitle.text.toString()
         tvExerciseTitle = findViewById(R.id.tvExerciseTitle)
         btnCounter = findViewById(R.id.btnCounter)
         tvTimer = findViewById(R.id.tvTimer)
 
-        // Odbieramy typ ćwiczenia z Intentu
         val exerciseType = intent.getStringExtra("exercise_type") ?: "Ćwiczenie"
+        tvExerciseTitle.text = exerciseType
         tvExerciseTitle.text = exerciseType
 
         startNewSeries()
@@ -39,18 +46,25 @@ class ExerciseActivity : AppCompatActivity() {
                 if (currentReps > 0) {
                     btnCounter.text = currentReps.toString()
                 } else {
+                    // Zapisujemy dane po zakończeniu serii
+                    val success = dbHelper.insertWorkout(exerciseType, currentReps, seriesLeft)
+                    if (success) {
+                        Toast.makeText(this, "Zapisano do DB", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Błąd przy zapisie do bazy!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                     seriesLeft--
                     if (seriesLeft > 0) {
                         startRestTimer()
                     } else {
                         finishWorkout()
-//                        btnCounter.text = "Koniec!"
-//                        btnCounter.isEnabled = false
                     }
                 }
             }
         }
     }
+
 
     private fun startNewSeries() {
         currentReps = seriesLeft
@@ -80,11 +94,20 @@ class ExerciseActivity : AppCompatActivity() {
             }
         }.start()
     }
+
     private fun finishWorkout() {
         btnCounter.text = "Koniec!"
         animateButtonBackground(R.drawable.circle_button_finish)
         //btnCounter.setBackgroundResource(R.drawable.circle_button_finish) // 🟢 zakończone
         btnCounter.isEnabled = false
+
+//        val exerciseType = intent.getStringExtra("exercise_type") ?: "Ćwiczenie"
+//        val totalRepsDone = 5 * 5 // np. powtórzenia * serie, albo liczby dynamicznie
+//        dbHelper.insertWorkout(exerciseType, totalRepsDone, 5)
+    }
+
+    private fun gotoDB() {
+
     }
 
     override fun onDestroy() {
@@ -98,5 +121,6 @@ class ExerciseActivity : AppCompatActivity() {
         btnCounter.setBackgroundResource(newDrawable)
         anim.start()
     }
+
 
 }
