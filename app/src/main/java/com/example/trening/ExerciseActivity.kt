@@ -4,9 +4,11 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 
 class ExerciseActivity : AppCompatActivity() {
 
@@ -27,7 +29,7 @@ class ExerciseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exercise)
         println(findViewById<TextView>(R.id.tvExerciseTitle))
-
+setSettings()
         dbHelper = DBHelper(this)
         //val exerciseType = tvExerciseTitle.text.toString()
         tvExerciseTitle = findViewById(R.id.tvExerciseTitle)
@@ -67,7 +69,12 @@ class ExerciseActivity : AppCompatActivity() {
         }
     }
 
+private fun setSettings()
+{
+    val ownLayer = findViewById<ConstraintLayout>(R.id.linearLayoutExcersise)
+    ownLayer.setBackgroundResource(android.R.color.darker_gray)
 
+}
     private fun startNewSeries() {
         currentReps = seriesLeft
         btnCounter.text = currentReps.toString()

@@ -4,12 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+setSettings()
         findViewById<Button>(R.id.btnPushUps).setOnClickListener {
             val intent = Intent(this, ExerciseActivity::class.java)
             intent.putExtra("exercise_type", "Pompki")
@@ -26,6 +27,14 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, HistoryActivity::class.java)
             startActivity(intent)
         }
+    }
+
+
+    private fun setSettings()
+    {
+        val ownLayer = findViewById<ConstraintLayout>(R.id.linearLayout3)
+        ownLayer.setBackgroundResource(android.R.color.darker_gray)
+
     }
 }//cos wyjdzie.
 
