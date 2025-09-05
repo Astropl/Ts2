@@ -33,6 +33,8 @@ class ExerciseActivity : AppCompatActivity() {
         tvExerciseTitle = findViewById(R.id.tvExerciseTitle)
         btnCounter = findViewById(R.id.btnCounter)
         tvTimer = findViewById(R.id.tvTimer)
+        //btnCounter = findViewById(R.id.btnCounter)
+        btnCounter.textSize = 32f
 
         val exerciseType = intent.getStringExtra("exercise_type") ?: "Ćwiczenie"
         tvExerciseTitle.text = exerciseType
@@ -77,6 +79,8 @@ class ExerciseActivity : AppCompatActivity() {
 
     private fun startRestTimer() {
         isResting = true
+        btnCounter = findViewById(R.id.btnCounter)
+        btnCounter.textSize = 28f
         btnCounter.text = "Odpoczynek"
         animateButtonBackground(R.drawable.circle_button_rest)
 
